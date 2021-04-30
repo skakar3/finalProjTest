@@ -16,6 +16,7 @@ const assets = [
   "./masks/Helmet2.png",
   "./masks/Helmet3.png",
   "./masks/Helmet4.png",
+  "./img/icons/icon.png"
 ]
 
 // event handler for the install event
