@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IT202-Spring2021-BigProject</title>
+
+  <!-- manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://unpkg.com/material-components-web@10.0.0/dist/material-components-web.min.css" rel="stylesheet">
+
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <style>
+
+    .screen {
+      display: none;
+    }
+    #gameCanvas {
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      background-color: "white";
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: "white";
+      /* hieght: 100%;
+      overflow: hidden; */
+    }
+
+    .image-option {
+      border: solid 5px silver;
+      width: 100px;
+    }
+
+    .image-option-active {
+      border-color: blue;
+    }
+
+/* #getInfo {
+
+  background-image: url('https://scx1.b-cdn.net/csz/news/800/2017/theoreticala.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  color: #FFFFFF;
+
+  } */
+
+    /* #GameScreen {
+      margin: 0;
+      padding: 0;
+      background-color: "white";
+      hieght: 100%;
+      overflow: hidden;
+    } */
+
+    main {
+      /* margin-left: 10px; */
+    }
+  </style>
+
+  <script>
+      // control the game play and pause state as screens are changed
+      let pauseGame = false;
+  </script>
+</head>
+
+<body>
+
+  <header class="mdc-top-app-bar">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+          <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" aria-label="Open navigation menu">menu</button>
+        <span class="mdc-top-app-bar__title">Space Explorers</span>
+      </section>
+    </div>
+  </header>
+ 
+  <aside class="mdc-drawer mdc-drawer--modal">
+    <div class="mdc-drawer__header">
+      <br>
+      <img src="img/icons/icon.png" width="60" height="60"></img>
+        <h3 class="mdc-drawer__title">Space Explorers</h3>
+        <h6 class="mdc-drawer__subtitle">Explorer-202</h6>
+    </div>
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+
+        <!-- Home Screen -->
+        <a class="mdc-list-item mdc-list-item--activated" href="#HomeScreen" aria-current="page" tabindex="0" aria-selected="true">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
+          <span class="mdc-list-item__text">Home</span>
+        </a>
+
+        <!-- How To Use Screen -->
+        <a class="mdc-list-item" href="#LearnMoreScreen" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help_outline</i>
+          <span class="mdc-list-item__text">Learn More</span>
+        </a>
+
+        <!-- Image of the Day Screen -->
+        <a class="mdc-list-item" href="#NASAImgScreen" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">image</i>
+          <span class="mdc-list-item__text">Image of the Day</span>
+        </a>
+
+        <!-- Suit Up Screen -->
+        <a class="mdc-list-item" href="#SuitUpScreen" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">photo_camera</i>
+          <span class="mdc-list-item__text">Suit Up</span>
+        </a>
+
+        <!-- Game Screen -->
+        <a class="mdc-list-item" href="#GameScreen" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">sports_esports</i>
+          <span class="mdc-list-item__text">Start Game</span>
+        </a>
+
+        <!-- Game Stats Screen -->
+        <a class="mdc-list-item" href="#GameStats" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">insert_chart_outlined</i>
+          <span class="mdc-list-item__text">Game Stats</span>
+        </a>
+
+        <!-- History Screen -->
+        <!-- <a class="mdc-list-item" href="#HistoryScreen" tabindex="-1" aria-selected="false">
+          <span class="mdc-list-item__ripple"></span>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">history</i>
+          <span class="mdc-list-item__text">History</span>
+        </a> -->
+
+      </nav>
+    </div>
+  </aside>
+
+  <div class="mdc-drawer-scrim"></div>
+  <main class="mdc-top-app-bar--fixed-adjust">
+    
+    <!-- Home Screen -->
+    <div id="HomeScreen" class="screen">
+      <center>
+      
+      <!-- div to get the user info -->
+      <div id="getInfo">
+        
+        <h5 class="mdc-typography--headline4">Welcome Explorer</h5>
+
+        <!-- Text Input with the label Enter your name  -->
+        <label class="mdc-text-field mdc-text-field--filled">
+          <span class="mdc-text-field__ripple"></span>
+          <span class="mdc-floating-label" id="my-label-id">Enter Your Name</span>
+          <input class="mdc-text-field__input" id="EnterName" type="text" aria-labelledby="my-label-id">
+          <span class="mdc-line-ripple"></span>
+        </label> 
+        <br> <br>
+        
+        
+        <!-- Button to store user data and invoke snackbar -->
+        <button class="mdc-button mdc-button--raised" id="JoinButton">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Join the Force</span>
+        </button>
+
+        <!-- Snackbar -->
+        <div class="mdc-snackbar">
+          <div class="mdc-snackbar__surface" role="status" aria-relevant="additions">
+            <div class="mdc-snackbar__label" aria-atomic="false">
+              Welcome Explorer
+            </div>
+            <div class="mdc-snackbar__actions" aria-atomic="true">
+              <button type="button" class="mdc-button mdc-snackbar__action">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <!-- div that contains the introduction to the app and all the screens -->
+      <div id="intro">
+
+        <!-- app intro -->
+        <h5 class="mdc-typography--headline5">What does the app do?</h5>
+
+        <p class="mdc-typography--body1">The Application will allow you to join us in our quest to explore the known universe in search of a habitable planet. We hope that this planet will serve as our new home. This application tells you why we are in search of a new home and also how you can help us find it.</p>
+
+        <p class="mdc-typography--body1">Use the Navigation Drawer to navigate through the pages.</p>  
+      
+        <!-- the search for a habitable planet -->
+        <h5 class="mdc-typography--headline5">The search for a habitable planet</h5>
+ 
+        <p class="mdc-typography--body1">The search for a habitable planet was initiated in response to the worsening environmental damage to planet Earth. Over the years, the human race has exploited the natural resources of this planet. This is causing irreversible damage to the planet we call home.</p>
+
+        <p class="mdc-typography--body1">Visit the info page to learn more about human impact on Earth's climate.</p>
+
+        <!-- Button to take user to climate info page -->
+        <button class="mdc-button mdc-button--raised" id="GoToInfo">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Learn More</span>
+        </button>
+
+        <!-- learn more about space -->
+        <h5 class="mdc-typography--headline5">Learn more about space</h5>
+
+        <p class="mdc-typography--body1">You will be exploring the space in search of a habitable planet. It is essential that you learn more about space before you start exploring it. Well, lucky you!
+        
+        NASA uploads a new image or video about space. This will be a great source of information for you. Go to the More on Science page to get your Daily Dose of Space.
+        </p>
+
+        <!-- Button to take user to Space info page -->
+        <button class="mdc-button mdc-button--raised" id="GoToSpaceInfo">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Daily Dose Of Space</span>
+        </button>        
+
+        <!-- Suit Up Screen -->
+        <h5 class="mdc-typography--headline5">Suit Up</h5>
+
+        <p class="mdc-typography--body1">You are now an explorer. Before you embark on your journey, you should suit up. Go to the Suit Up page to try on our latest space gear.
+        </p>        
+
+        <!-- Button to take user to climate Suit Up page -->
+        <button class="mdc-button mdc-button--raised" id="GoToSuitUp">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Suit Up</span>
+        </button>
+
+        <!-- Start Game screen -->
+        <h5 class="mdc-typography--headline5">Start Exploring</h5>
+
+        <p class="mdc-typography--body1">You are now ready. Go to the Start Exploring page to start your jourey.</p>
+
+        <!-- Button to take user to Start Game page -->
+        <button class="mdc-button mdc-button--raised" id="GoToStartGame">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Explore</span>
+        </button>
+
+        <!-- Exploration Statistics Screen -->
+        <h5 class="mdc-typography--headline5">Exploration Statistics</h5>
+
+        <p class="mdc-typography--body1">Have you already played the game? Then visit the exploration statistics page to view the score for recent game and your highest score.</p>
+
+        <!-- Button to take user to Exploration Statistics page -->
+        <button class="mdc-button mdc-button--raised" id="GoToExpStat">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Exploration Statistics</span>
+        </button>
+
+        <br><br><br>
+
+      </div>
+
+      </center>
+   
+    </div> 
+    
+    <!-- Home Screen Script -->
+    <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script>
+      let userName;
+
+      // Add script to initialize the components
+      let textInput = mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
+
+      let button = mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button--raised'));
+    
+      let snackbar = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector(".mdc-snackbar"));
+
+      var db = new Dexie("players_db");
+      db.version(1).stores({
+          players: 'userName'
+      });
+
+      // click event handler for the button, the snackbar text is set and the snackbar is shown.
+      document.querySelector("#JoinButton").addEventListener("click", (event) => {
+        // get user input from input element
+        let userInput = textInput.value;
+        
+        // store the user's name
+        userName = userInput;
+  
+        db.players
+          .where('userName')
+          .equals(userInput)
+          .count()
+          .then( (count) => {
+            console.log("User found : " + count);
+            
+            // check if username does not exist
+            // add the new player into db
+            if (count == 0) {
+
+              // add the userName to the database of players
+              db.players.put({userName: userInput, highestScore: 0, date: new Date()})
+              .then ( (item) => {
+
+                // update and open the snackbar
+                snackbar.labelText = "Welcome Explorer " + userInput;
+                snackbar.open();
+
+              });
+
+            }
+
+        });
+        
+        // update and open the snackbar
+        snackbar.labelText = "Welcome Explorer " + userInput;
+        snackbar.open();
+      
+        // // add the userName to the database of players
+        // db.players.put({userName: userInput, highestScore: 0, date: new Date()})
+        // .then ( (item) => {
+
+        //   // update and open the snackbar
+        //   snackbar.labelText = "Welcome Explorer " + userInput;
+        //   snackbar.open();
+
+        // });
+
+      });
+      
+      // buttons in the main screen to change screens
+      let b1 = mdc.ripple.MDCRipple.attachTo(document.querySelector('#GoToInfo'));
+      let b2 = mdc.ripple.MDCRipple.attachTo(document.querySelector('#GoToSpaceInfo'));
+      let b3 = mdc.ripple.MDCRipple.attachTo(document.querySelector('#GoToSuitUp'));
+      let b4 = mdc.ripple.MDCRipple.attachTo(document.querySelector('#GoToStartGame'));
+      let b5 = mdc.ripple.MDCRipple.attachTo(document.querySelector('#GoToExpStat'));
+    </script>
+    
+
+    <!-- Script for the Info Screen -->
+
+    <!--Load the AJAX API-->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // fetch form the CO2 APi and draw the chart
+      let co2Chart = () => {
+        let lineChart = new google.visualization.DataTable();
+        
+        lineChart.addColumn('string','date');
+        lineChart.addColumn('number','CO2 Levels (PPM)');
+        
+        fetch("https://global-warming.org/api/co2-api")
+        .then( (response) => {
+          return response.json()
+        })
+        .then( (json) => {
+          json.co2.forEach( (elem) => {
+            lineChart.addRow(["Date : " + elem.year +"/"+ elem.month +"/"+ elem.day, parseInt(elem.trend)]);
+          });
+        
+        // Set chart options
+        let options = {'title':"Line chart showing the Carbon dioxide levels in the Earth's atmosphere in Parts Per Million (PPM) for each day from 2011 to present",
+        'width':1500,
+        'height':500};
+        
+        // Instantiate and draw our chart, passing in some options.
+        let chart = new google.visualization.LineChart(document.querySelector('#co2_line_chart_div'));
+        chart.draw(lineChart, options);
+        })
+      }      
+      
+      // fetch from methane API and draw chart
+      let methaneChart = () => {
+        let lineChart = new google.visualization.DataTable();
+        
+        lineChart.addColumn('string','date');
+        lineChart.addColumn('number','Average (PPM)');
+
+        fetch("https://global-warming.org/api/methane-api")
+        .then( (response) => {
+          return response.json()
+        })
+        .then( (json) => {
+          json.methane.forEach( (elem) => {
+            lineChart.addRow(["Date : " + elem.date, parseInt(elem.average)])  });
+        
+        // Set chart options
+        let options = {'title':"Line chart showing the Methane levels in the Earth's atmosphere in Parts Per Million (PPM) for each month from 1983 to present",
+        'width':1500,
+        'height':500};
+        
+        // Instantiate and draw our chart, passing in some options.
+        let chart = new google.visualization.LineChart(document.querySelector('#methane_line_chart_div'));
+        chart.draw(lineChart, options);
+        })
+      }
+      
+      // fetch from N2O chart and draw chart
+      let n2oChart = () => {
+        let lineChart = new google.visualization.DataTable();
+        
+        lineChart.addColumn('string','date');
+        lineChart.addColumn('number','Average (PPM)');
+
+        fetch("https://global-warming.org/api/nitrous-oxide-api")
+        .then( (response) => {
+          return response.json()
+        })
+        .then( (json) => {
+          json.nitrous.forEach( (elem) => {
+            lineChart.addRow([elem.date, parseInt(elem.average)])  });
+        
+        // Set chart options
+        let options = {'title':"Line chart showing the Nitrous Oxide levels in the Earth's atmosphere in Parts Per Million (PPM) for each month from 2001 to present",
+        'width':1500,
+        'height':500};
+
+        // Instantiate and draw our chart, passing in some options.
+        let chart = new google.visualization.LineChart(document.querySelector('#n2o_line_chart_div'));
+        chart.draw(lineChart, options);
+        })
+      }
+
+      // Callback that creates and populates a data table,
+      // instantiates the chart, passes in the data and
+      // draws it.
+      let drawCharts = () => {
+   
+        // draw the charts
+        methaneChart();
+        co2Chart();
+        n2oChart();
+      }
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawCharts);
+
+    </script>
+
+    <!-- Help Screen -->
+    <div id="LearnMoreScreen" class="screen">
+      <center>
+
+        <h5 class="mdc-typography--headline4">The Search for a new home</h5>
+        
+        <p class="mdc-typography--body1">Since the industrial revolution, we humans exploited the resources of planet Earth in countless ways. Human activities lead to the release of poisonous gases like Carbon Dioxide, Methane, and Nitrous Oxide into the atmosphere. These gases will soon render this planet uninhabitable. Hence, we have initiated the search for a new planet to call home. This page discusses these gases in detail.</p>
+
+        <!-- div to store all the charts -->
+        <div id="Charts">
+          
+          <!-- CO2 -->
+          <h5 class="mdc-typography--headline4">Carbon Dioxide</h5>
+          
+          <p class="mdc-typography--body1">For thousands of years, the natural concentration of CO2 in earth atmosphere was around 280 ppm. From the beginning of the industrial revolution, human activities like the burning of fossil fuels, deforestation, and livestock have increased this amount by more than 30%.</p>
+
+          <!--Div to hold line chart of CO2-->
+          <div id="co2_line_chart_div"></div>
+
+
+          <!-- Methane -->
+          <h5 class="mdc-typography--headline4">Methane</h5>
+          
+          <p class="mdc-typography--body1">Methane is a flammable gas formed by geological and biological processes. Some of the natural ones are leaks from natural gas systems and wetlands. 50-65% of total global methane emissions come from human activities. These include livestock, agriculture, oil and gas systems, waste from homes and businesses, landfills, and so on.</p>
+          
+          <p class="mdc-typography--body1">Methane is a gas with a global warming potential several times stronger than of CO2. For more than 650,000 years, methane concentration in the atmosphere was between 350 – 800 ppb. From the beginning of the industrial revolution, human activities have increased this amount by around 150%.</p>
+
+          <!--Div to hold line chart of methane-->
+          <div id="methane_line_chart_div"></div>    
+
+          <!-- Nitrous Oxide -->
+          <h5 class="mdc-typography--headline4">Nitrous Oxide</h5>
+
+          <p class="mdc-typography--body1">Nitrous oxide is a gas that is produced by the combustion of fossil fuel and solid waste, nitrogen-base fertilizers, sewage treatment plants, natural processes, and other agricultural and industrial activities. It is the third largest heat-trapping gas in the atmosphere and the biggest ozone-destroying compound emitted by human activities.</p>
+
+          <!--Div to hold line chart of N2O-->
+          <div id="n2o_line_chart_div"></div>
+        
+        </div>
+
+      </center>
+
+    </div>
+    
+    <!-- Image of the Day Screen -->
+    <div id="NASAImgScreen" class="screen">
+      <center>
+      <div id="NASAScreenBody">
+      <h5 class="mdc-typography--headline3">Daily Dose of Space</h5>
+      <h5 class="mdc-typography--headline4" id="Screen1H1"></h5>
+      
+      </center>
+
+    </div>
+
+    <!-- Script for Image of the Day Screen -->
+    <script>
+
+      // fetch data from the Pic of the day API
+      fetch ("https://api.nasa.gov/planetary/apod?api_key=jfmJBQV0xTVlEOMAhKwtVWeJjRVCmtVVxIivIEsk")
+      
+      .then ( (response)=> {
+        return response.json()
+      })
+
+      .then ( (response) => {
+
+        // modify the title
+        let h1 = document.querySelector("#Screen1H1")
+        h1.innerText = response.title;
+        
+        // get the media_type of the data
+        let mediaType = response.media_type;
+        console.log("media_type : " + mediaType);
+        
+        // check if the media is a video or an image
+        if (mediaType == "video") {
+          // create a video element
+          let vid = document.createElement("iframe");
+          vid.id = "Screen1Video";
+          // let vid = document.querySelector("#Screen1Video");
+
+          let vidSrc = response.url;
+          vid.setAttribute("src", vidSrc);
+          vid.setAttribute("width", "650");
+          vid.setAttribute("height", "450");
+          vid.setAttribute("controls", "controls");
+
+          document.querySelector("#NASAScreenBody").appendChild(vid);
+
+        } else if (mediaType == "image") {
+
+          // create an image element
+          let img = document.createElement("img");
+          img.id = "Screen1Img";
+          // get smaller image
+          let imgSrc = response.url; 
+          img.setAttribute("src", imgSrc);
+          img.setAttribute("width", 500);
+
+          document.querySelector("#NASAScreenBody").appendChild(img);
+        }
+
+        // create a p element
+        let p = document.createElement("p");
+        p.id = "Screen1P";
+        p.classList.add("mdc-typography--body1");
+        p.innerText = response.explanation;
+        document.querySelector("#NASAScreenBody").appendChild(p);
+
+      });
+    </script>
+    
+    <!-- Suit Up Screen -->
+    <div id="SuitUpScreen" class="screen">
+
+      <center>
+
+        <h5 class="mdc-typography--headline4">Suit Up Screen</h5>
+
+        <video id="vidPlayer" width="320" height="240" controls autoplay></video>
+        <canvas id="userCanvas" width="320" height="240"></canvas>
+        
+        <br><br>
+        <button class="mdc-button mdc-button--raised" id="capture">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Suit Up</span>
+        </button>
+        <br><br>
+
+        <div id="imageOptions">
+          <h2 class="mdc-typography--headline5">Choose your Helmet</h2>
+        </div>
+      
+      </center>
+    
+    </div>
+    
+    <!-- Script for the suit up screen -->
+    <script>
+
+      // array of the image options 
+      const images = [
+          {
+          "file": "masks/Helmet1.png",
+          "type": "mask",
+          "eye_distance": 95,
+            "offset_horizontal": 120,
+            "offset_vertical": 235
+          },
+          {
+          "file": "masks/Helmet2.png",
+          "type": "mask",
+          "eye_distance": 130,
+            "offset_horizontal": 178,
+            "offset_vertical": 310
+          },
+          {
+          "file": "masks/Helmet3.png",
+          "type": "mask",
+          "eye_distance": 110,
+            "offset_horizontal": 250,
+            "offset_vertical": 345
+          },
+          {
+          "file": "masks/Helmet4.png",
+          "type": "mask",
+          "eye_distance": 150,
+            "offset_horizontal": 350,
+            "offset_vertical": 520
+          }
+      ];
+
+
+      // image object for the overlay
+      let activeImage = images[0];
+      let activeImageObject = new Image();
+      activeImageObject.src = activeImage["file"];
+
+      // cleaner code if we have these as variables
+      const supported = 'mediaDevices' in navigator;
+      const vidPlayer = document.getElementById('vidPlayer');
+      const userCanvas = document.getElementById('userCanvas');
+      const userCtx = userCanvas.getContext('2d');
+      const captureButton = document.getElementById('capture');
+      const dataDiv = document.getElementById('imageData');
+      
+
+      const visionApiEndpoint = "https://vision.googleapis.com/v1/images:annotate";
+      let requestBody;
+    
+
+      // for invoking the camera
+      const constraints = {
+        video: true,
+      };
+    
+
+      // Attach the video stream to the video element and autoplay.
+      navigator.mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        vidPlayer.srcObject = stream;
+      });
+
+
+      // capture button listener
+      captureButton.addEventListener('click', () => {
+        // Draw the video frame to the canvas.
+        userCtx.drawImage(vidPlayer, 0, 0, userCanvas.width, userCanvas.height);
+        // get the image facial data
+        getImageData("FACE_DETECTION");
+      });
+    
+      
+
+      // display the nose-and-glasses images in the DOM
+      images.forEach( (item, idx) => {
+        let img = document.createElement("img");
+        img.setAttribute("src",  item.file);
+        img.classList.add("image-option");
+        img.setAttribute("data-index", idx);
+        
+        // set the width and height of image
+        // img.setAttribute("width", 400);
+        img.setAttribute("height", 150);
+
+        if (item == activeImage) {
+          img.classList.add("image-option-active");
+        }
+        document.querySelector("#imageOptions").append(img);
+      });
+
+
+      // handler to set the active image
+      document.querySelectorAll(".image-option").forEach ( (item) => {
+        item.addEventListener ("click", (event) => {
+          document.querySelector(".image-option-active").classList.remove("image-option-active");
+          event.target.classList.add("image-option-active");
+          activeImage = images[event.target.getAttribute("data-index")];
+          activeImageObject.src = activeImage["file"];
+        });
+      });
+
+
+        
+        
+      let getImageData = (type) => {
+          
+          // structure the request body based on Cloud Vision API docs
+          requestBody = {
+            "requests":[
+              {
+                "image":{
+                  "content":userCanvas.toDataURL().split(",")[1]
+                },
+                "features":[
+                  {
+                    "type": type,
+                    "maxResults":10
+                  }
+                ]
+              }
+            ]
+          };
+
+
+          fetch(visionApiEndpoint + "?key=AIzaSyD0mL4Gws5Wa5RoXJAc-EfPxvcoAM_27Ns", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(requestBody)
+
+          })
+          .then ( (response) => {return response.json() })  
+          .then (function(data) {
+
+              /*
+                  nose and glasses lens centers are about 300px apart,
+                  so we'll have to scale to paste on face.
+              */
+              
+              let left_eye = data.responses[0].faceAnnotations[0].landmarks.filter((el) => {return el.type == "LEFT_EYE"})[0];
+
+              // let right_eye = response.responses[0].faceAnnotations[0].landmarks.filter(function(el) {return el.type == "RIGHT_EYE_PUPIL"})[0];
+              let right_eye = data.responses[0].faceAnnotations[0].landmarks.filter((el) => {return el.type == "RIGHT_EYE"})[0];
+              
+              /*  compare the distance between the eyes in the response data 
+                    to the distance between the lens centers to get a scaling pct 
+              */
+
+              // distance for the active image
+              let imageEyeDistance = activeImage["eye_distance"];
+
+
+              let rightX = right_eye.position.x;
+              let leftX = left_eye.position.x;
+
+              let eye_distance = parseInt(rightX) - parseInt(leftX);
+              
+              
+              let scale_pct = eye_distance/imageEyeDistance;   
+
+              /*  after getting that part working, I needed to offset
+                  the destination x,y due to drawImage dest x,y as the 
+                  top left corner of the image we're drawing;
+                  I had to look at the nose/glasses image;  I found the center of the right-eye lens is 150 x and 100 y from the top left of the image
+              */
+
+              let destOffsetX = -1*activeImage["offset_horizontal"];
+              let destOffsetY = -1*activeImage["offset_vertical"];
+
+
+              /* after some more playing around, I realized that "right eye"
+                  in the data doesn't mean *my* right eye; I actually need to offset from the "left (most) eye (in the image)"
+              */
+
+              let leftY = left_eye.position.y;
+
+              let destX = leftX + (destOffsetX*scale_pct);
+              let destY = leftY + (destOffsetY*scale_pct);
+              
+
+
+              /* and finally, to avoid problems in getting the data url of a 
+                  canvas that has been modified, I'm putting the "funny nose"
+                  version into a separate canvas
+              */
+              userCtx.drawImage(
+                activeImageObject,                    // the image
+                destX,                                  // horiz offset
+                destY,                                  // vert offset
+                activeImageObject.width*scale_pct,    // the scaled width
+                activeImageObject.height*scale_pct    // the scaled height
+              );
+
+            });
+    
+      }
+    </script>
+
+    <!-- game screen -->
+    <div id="GameScreen" class="screen">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Game Stats Screen -->
+    <div id="GameStats" class="screen">
+      <center>
+        <h5 class="mdc-typography--headline4">Exploration Statistics</h5>
+
+        <!-- Button to store user data and invoke snackbar -->
+        <button class="mdc-button mdc-button--raised" id="ViewExpStats">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Click to View Updated Exploration Stats</span>
+        </button>
+
+        <p class="mdc-typography--body1" id="StatsP1"></p>
+        <p class="mdc-typography--body1" id="StatsP2"></p>
+
+      </center>
+
+    </div>
+
+    <!-- Script for Exploration Stats screen -->
+    <script>
+
+      // when the user clicks View Exploration Stats button
+      document.querySelector("#ViewExpStats").addEventListener("click", (event) => {
+
+        // display the recent score
+        let p1 = document.querySelector("#StatsP1");
+        if (player.score == 0) {
+          p1.innerText = "Go to the Start Game page and play a game to set your recent score" 
+        } else {
+          p1.innerText = "Exploration Score (Recent): " + player.score;
+        }
+
+        // display the highest score
+        let p2 = document.querySelector("#StatsP2");
+        p2.innerText = "Enter your UserName in the Home page to see your Higest Score"
+
+        db.players.get(userName)
+        .then( (item) => {
+          p2.innerText = "Exploration Score (Highest) : " + item.highestScore;
+        });
+      });
+    </script>
+
+
+</main> 
+
+
+	  <!-- script to support a SPA   -->
+    <script>
+
+      // define the drawer
+      const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+
+      // define topApp bar
+      const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+
+      // navigation drawer
+      const listEl = document.querySelector('.mdc-drawer .mdc-list');
+      const mainContentEl = document.querySelector('main');
+  
+      listEl.addEventListener('click', (event) => {
+        drawer.open = false;
+      });
+
+      document.querySelector("header button.mdc-top-app-bar__navigation-icon").addEventListener("click", (event) => {
+        drawer.open = true;
+      });
+      
+      // close the navbar when the user clicks anywhere
+      window.addEventListener('click', () => {
+        drawer.open = false;
+      });
+
+      document.body.addEventListener('MDCDrawer:closed', () => {
+        // mainContentEl.querySelector('input, button').focus();
+      });
+
+      // set the screen
+      let setScreen = (href) => {
+        hideAllScreens();
+        console.log(href);
+        console.log(event);
+        
+        // check if the current screen is the game screen or not
+        if (href != "#GameScreen") {
+          pauseGame = true;
+
+          // adjust the properties of the body to allow the scroll bar
+          // document.querySelector("body").removeAttribute("hieght");
+          document.querySelector("body").style.overflow = "scroll";
+
+        } else if (href == "#GameScreen") {
+          pauseGame = false;
+
+          // adjust the properties of the body to prevent the scroll bar
+          document.querySelector("body").style.height = "100%";
+          document.querySelector("body").style.overflow = "hidden";
+        }
+
+        document.querySelector(href).style.display="block";
+      }
+
+    document.querySelectorAll('.mdc-list-item').forEach((element) => {
+      element.addEventListener('click', (event) => {
+        hideAllScreens();
+        let href = event.target.getAttribute("href");
+        console.log(href);
+        console.log(event);
+        
+        // check if the current screen is the game screen or not
+        if (href != "#GameScreen") {
+          pauseGame = true;
+
+          // adjust the properties of the body to allow the scroll bar
+          // document.querySelector("body").removeAttribute("hieght");
+          document.querySelector("body").style.overflow = "scroll";
+
+        } else if (href == "#GameScreen") {
+          pauseGame = false;
+
+          // adjust the properties of the body to prevent the scroll bar
+          document.querySelector("body").style.height = "100%";
+          document.querySelector("body").style.overflow = "hidden";
+        }
+
+        document.querySelector(href).style.display="block";
+      });
+    });
+    
+    let hideAllScreens = () =>{
+      document.querySelectorAll(".screen").forEach((element) => {
+        element.style.display="none";
+      });
+    }
+
+    // event handlers for the buttons to change screens
+    document.querySelector("#GoToInfo").addEventListener("click", (event) => {
+      setScreen("#LearnMoreScreen");
+    });
+    
+    document.querySelector("#GoToSpaceInfo").addEventListener("click", (event) => {
+      setScreen("#NASAImgScreen");
+    });
+    
+    document.querySelector("#GoToSuitUp").addEventListener("click", (event) => {
+      setScreen("#SuitUpScreen");
+    });
+    
+    document.querySelector("#GoToStartGame").addEventListener("click", (event) => {
+      setScreen("#GameScreen");
+    });
+
+    document.querySelector("#GoToExpStat").addEventListener("click", (event) => {
+      setScreen("#GameStats");
+    });
+
+    </script>
+
+    <script>
+      window.addEventListener('load', (event) => {
+        document.querySelector("#HomeScreen").style.display="block";
+      });
+    </script>
+    
+    <!-- script for the game -->
+    <script src="script/game.js"></script>
+    
+    <!-- Script for Service Worker -->
+    <script>
+      // Register the Service Worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js", { scope: "." }).then(
+            (registration) => {
+              // registration successful
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope
+              );
+            },
+            (err) => {
+              // registration failed
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
+        });
+      }
+    </script>
+
+  </body>
+</html>

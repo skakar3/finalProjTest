@@ -1,0 +1,15 @@
+{
+    "name": "Space Explorers",
+    "short_name": "SE",
+    "start_url": "index.html",
+    "display": "standalone",
+    "theme_color": "#db4938",
+    "icons": [
+        {
+          "src": "./img/icons/icon.png",
+          "type": "image/png",
+          "sizes": "256x256"
+        }
+    ],
+    "offline_enabled": "true"
+}
